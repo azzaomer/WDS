@@ -166,21 +166,22 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
         
         v = i % k
         print("Is ",cost_new ,"< = ", l[v])
-        #move acceptance
-        iif cost_new <= l[v]:
-            print("yes")
-            cost = cost_new
-            solution_new = solution.copy()
+        #move acceptance :
+        if cost_new <= best_cost:
+                best_cost = cost_new
+                best_iter = i
+                solution_new = solution.copy()
+                print(best_cost)
         else:
-            solution = solution_new.copy()
-            
-        
+              solution = solution_new.copy()
+	
         l[v] = cost
         print(i)
         i=i+1
             
         print(v)
-        print(cost)
+        print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
+        print(solution)
             
         
     print("the best cost = " ,cost)
