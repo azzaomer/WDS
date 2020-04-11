@@ -171,6 +171,30 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     print("the best cost = " ,cost_new)
                 else:
                     solution = solution_new.copy()
+   print("the best cost = " ,best_cost)
+    
+   print(solution)
+        
+   for i in range(3):
+        
+        #calculate the new cost
+        Change(solution, NumberOfPipeSizesAvailable)
+        cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+        
+        #move acceptance
+        if cost_new <= best_cost:
+            best_cost = cost_new
+            best_iter = i
+            solution_new = solution.copy()
+            print(best_cost)
+            
+            
+        else:
+            solution = solution_new.copy()
+    print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
+    #print(solution)
+
+  
 
 def Change(sol, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
