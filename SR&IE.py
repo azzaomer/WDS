@@ -156,34 +156,36 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     print(solution)
     print(cost)
     
-    operator = random.randint(1,9)
-    print("selected LLH = ",operator)
+     best_cost = cost
+     best_iter = 0
     
-    for i in range(4):
+
+    for j in range(8):
+        print(j)
+        operator = random.randint(1,9)
+        print("selected LLH = ",operator)
+        for i in range(4):
          
-        #print(solution)
+            #print(solution)
         
-        #Select LLH using simpel random method (SR): 
-        Operaters(operator)
-       
-        #print("changed solution")
-        #print(solution)
-      
+            #Select LLH using simpel random method (SR): 
+            Operaters(operator)
+     
         
-        #calculate the new cost
-        cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-       
-        #move acceptance :
-        if cost_new <= cost:
-            cost = cost_new
-            solution_new = solution.copy()
-            print(cost)
-            print(solution)
-        else:
-            solution = solution_new.copy()
-    
-    print(cost)
-    print(solution)
+            #calculate the new cost
+            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+           
+                #move acceptance :
+            if cost_new <= best_cost:
+                best_cost = cost_new
+                best_iter = i
+                solution_new = solution.copy()
+                print(best_cost)
+            else:
+                solution = solution_new.copy()
+        
+        print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
+        print(solution)
     
 
    
