@@ -180,9 +180,10 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
             else:
                 solution = solution_new.copy()
                 operator = random.randint(1,9)
+		print("new operator = " ,operator)
         
-     print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
-     print(solution)
+    print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
+    print(solution)
     
 
    
