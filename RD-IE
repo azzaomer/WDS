@@ -163,7 +163,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
          
             #print(solution)
         
-            #Select LLH using random DESENT method (RD):
+            #Select LLH using Random Descent method (RD):
             operator = random.randint(1,9)
             Operaters(operator)
      
