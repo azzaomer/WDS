@@ -156,8 +156,8 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     print(solution)
     print(cost)
     
-     best_cost = cost
-     best_iter = 0
+    best_cost = cost
+    best_iter = 0
     
 
     for j in range(8):
