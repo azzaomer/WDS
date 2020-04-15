@@ -3,6 +3,8 @@ import random
 import math
 from epanettools import epanet2 as et
 
+import matplotlib.pyplot as plt
+
 def runSim(fileName, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
 
 	errorCode=0
@@ -134,7 +136,13 @@ def checkEpanetErrorCodes(errorCode):
 	 
 def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
 	for s in range(NumberOfPipes):
-		solution[s] = random.randint(0, NumberOfPipeSizesAvailable - 1)    
+          solution[s] = random.randint(0, NumberOfPipeSizesAvailable - 1)
+          
+          return (solution)
+		
+    
+   
+   
 
 def ReadFile(f_name):
 
@@ -144,47 +152,50 @@ def ReadFile(f_name):
 
     return data
 
-def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
+def LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
+    
     #1- calculate intial solution
-    #2- calculate initial cost
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+    
+    #2- calculate initial cost
     solution_new = solution.copy()
     print(cost)
     
     #3-specify L :
-    k=10
+    k=1000
     l = [cost]*k
-    print(l)
-   
+  
+    best_cost = cost
+    best_iter = 0
+    
     i=0
- 
-    while (i<20):
+    while (i <= 40000):
+        # Generate candidate solution S' 
+        Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable) 
         
-        Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
+        #f'(S')
         cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
         
         
         v = i % k
-        print("Is ",cost_new ,"< = ", l[v])
-        #move acceptance :
-        if cost_new <= best_cost:
-                best_cost = cost_new
-                best_iter = i
-                solution_new = solution.copy()
-                print(best_cost)
+
+        #move acceptance
+        if cost_new <= l[v]:
+            best_cost = cost_new
+            solution_new = solution.copy()
+            best_iter = i
+            print(best_cost)
         else:
-              solution = solution_new.copy()
-	
-        l[v] = cost
-        print(i)
-        i=i+1
+            solution = solution_new.copy()
             
-        print(v)
-        print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
-        print(solution)
-            
+        #Include objective value in the list
+        l[v] = cost_new
+        i+=1
         
-    print("the best cost = " ,cost)
+        
+    print("the best cost = ",best_cost," iteration =" ,best_iter ) 
+   
+   
     
     #print(l)
 
@@ -218,8 +229,8 @@ NodesRequireHeadLevelDict = dict(NodesRequireHeadLevel)
 
 DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSizesAvailable*2 + NumberOfNodesRequireHeadLevels + 7][1])
 
-solution = [0] * NumberOfPipes
+solution = [1] * NumberOfPipes
 
-HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
 
