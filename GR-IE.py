@@ -251,7 +251,7 @@ def IncreaseAllPipesBy1(solution):
     #7- Randomly Increase one pipe :
 def RandomlyIncrease(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
-    if solution[s] < 16:
+    if solution[s] < 15:
         solution[s] += 1
     #print("changed pipe index = ",s)
     
