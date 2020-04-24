@@ -163,7 +163,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     best_op = 0
     best_cost2 = 0
     best_op2 = 0
-    #Select LLH using Greedy approche : 
+    #Select LLH using Greedylike new approche : 
     
     for j in range(9):
 	
