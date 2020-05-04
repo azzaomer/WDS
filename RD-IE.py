@@ -149,40 +149,38 @@ def ReadFile(f_name):
 def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
 
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-    Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
     solution_new = solution.copy()
-    
-    print("the initial solution")
-    print(solution)
     print(cost)
     
     best_cost = cost
     best_iter = 0
-   
-    for i in range(4):
-         
-            #print(solution)
-        
-            #Select LLH using Random Descent method (RD):
-            operator = random.randint(1,9)
+    best_op = 0
+
+    #Select LLH using Random Descent method (RD):
+    operator = random.randint(1,9)
+    
+    for i in range(40000):
+            
             Operaters(operator)
-     
-        
-            #calculate the new cost
+            #calculate the new cost :
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
            
-                #move acceptance :
+            #move acceptance :
             if cost_new <= best_cost:
                 best_cost = cost_new
                 best_iter = i
+                
+                best_op = operator
+                
                 solution_new = solution.copy()
                 print(best_cost)
             else:
                 solution = solution_new.copy()
+                #change the operator randomly :
                 operator = random.randint(1,9)
-		print("new operator = " ,operator)
+	
         
-    print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
+    print("best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH ",best_op)
     print(solution)
     
 
@@ -233,7 +231,7 @@ def IncreaseAllPipesBy1(solution):
     #7- Randomly Increase one pipe :
 def RandomlyIncrease(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
-    if solution[s] < 15:
+    if solution[s] < 16:
         solution[s] += 1
     #print("changed pipe index = ",s)
     
@@ -302,7 +300,7 @@ NodesRequireHeadLevelDict = dict(NodesRequireHeadLevel)
 
 DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSizesAvailable*2 + NumberOfNodesRequireHeadLevels + 7][1])
 
-solution = [0] * NumberOfPipes
+solution = [1] * NumberOfPipes
 
 HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
