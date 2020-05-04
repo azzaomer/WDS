@@ -149,46 +149,39 @@ def ReadFile(f_name):
 def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
 
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-    Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
-    solution_new = solution.copy()
     
-    print("the initial solution")
-    print(solution)
+    solution_new = solution.copy()
+   
     print(cost)
     
     best_cost = cost
     best_iter = 0
+    best_op = 0
     
-
-    for j in range(8):
-        print(j)
-        operator = random.randint(1,9)
-        print("selected LLH = ",operator)
-        for i in range(4):
+    for i in range(40000):
          
-            #print(solution)
-        
-            #Select LLH using simpel random method (SR): 
+            #Select LLH using simpel random method (SR):
+            operator = random.randint(1,9)
             Operaters(operator)
      
-        
             #calculate the new cost
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
            
-                #move acceptance :
+            #move acceptance :
             if cost_new <= best_cost:
                 best_cost = cost_new
                 best_iter = i
+                
+                best_op = operator
+                
                 solution_new = solution.copy()
                 print(best_cost)
             else:
                 solution = solution_new.copy()
         
-        print("the best cost = " ,best_cost,"   at iteration = ",best_iter)
-        print(solution)
-    
-
+    print("   best cost = ",best_cost,"   iteration = ",best_iter,"   LLH ",best_op)
    
+    
 ##################################################LLHs :##########################################################
     #1- change one pipe
 def Change(solution, NumberOfPipeSizesAvailable):
@@ -201,64 +194,64 @@ def ChangeTowPipes(solution, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1) 
     
-    s = random.randint(0, len(solution) - 1)
-    solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1)
+    k = random.randint(0, len(solution) - 1)
+    solution[k] =  random.randint(0, NumberOfPipeSizesAvailable - 1)
   
     # 3- swap operator :
 def swap_random(solution):
      idx = range(len(solution))
      i1, i2 = random.sample(idx, 2)
      solution[i1], solution[i2] = solution[i2], solution[i1] 
-     print(i1, i2)
-     
+   
      #Decrease :
-     # 4-Decrease all pipe sizes by one:
-     
+# 4-Decrease all pipe sizes by one:     
 def decreaseAllPipesByOne(solution):
         for s in range(len(solution)):
             if solution[s]>0:
               solution[s] -= 1
-     #5-decrease a randomly selected pipe diameter by one pipe size:
+     
+#5-decrease a randomly selected pipe diameter by one pipe size:
 def RandomlyDecrease(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] > 0:
         solution[s] -= 1
-    #print("changed pipe index = ",s)
+
     
     #increase :
-    #6- Increase all pipes :
+#6- Increase all pipes :
 def IncreaseAllPipesBy1(solution):
      for s in range(len(solution)):
          if solution[s]<15:
            solution[s] += 1
             
-    #7- Randomly Increase one pipe :
+#7- Randomly Increase one pipe :
 def RandomlyIncrease(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
-    if solution[s] < 15:
+    if solution[s] <15:
         solution[s] += 1
-    #print("changed pipe index = ",s)
+
     
-    #8- randomly change from 1 to 5 pipes :
+#8- randomly change from 1 to 5 pipes :
 def changeInRange(solution,NumberOfPipeSizesAvailable):
     k = random.randint(1,5)
-    print(k ," pipes will be changed")
+   
     idx= range(len(solution))
     s= random.sample(idx,k)
-    print(s)
+
     for i in range(len(s)):
         solution[s[i]]=random.randint(0,NumberOfPipeSizesAvailable-1)
-    print(solution)
+  
     
-    # 9-
+# 9-
 def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
 	for s in range(NumberOfPipes):
 		solution[s] = random.randint(0, NumberOfPipeSizesAvailable - 1)
 
+
 #Dictionary mapping for functions 
 def Operaters(LLH):
     switcher = {
-        1: lambda : Change(solution, NumberOfPipeSizesAvailable),
+        1: lambda :Change(solution, NumberOfPipeSizesAvailable),
         2: lambda :ChangeTowPipes(solution, NumberOfPipeSizesAvailable),
         3: lambda :swap_random(solution),
         4: lambda :decreaseAllPipesByOne(solution),
@@ -304,7 +297,7 @@ NodesRequireHeadLevelDict = dict(NodesRequireHeadLevel)
 
 DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSizesAvailable*2 + NumberOfNodesRequireHeadLevels + 7][1])
 
-solution = [0] * NumberOfPipes
+solution = [1] * NumberOfPipes
 
 HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
