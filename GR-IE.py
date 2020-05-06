@@ -185,7 +185,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     solution = solution_new.copy() 
                     
                 
-            print(i,"- ",best_cost,"      LLH = ",best_op)
+                print(i,"- ",best_cost,"      LLH = ",best_op)
             
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
     #print(solution)
