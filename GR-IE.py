@@ -162,7 +162,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 
     #Select LLH using Greedy approach : 
     
-    for i in range(40000):
+    for i in range(2):
             #Selected LLH using Greedy approche :
             for j in range(9):
 	
@@ -172,20 +172,34 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                 Operaters(operator)
 	
                 cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-     
-                if cost_new <= best_cost:
+                print(cost_new)
+                if cost_new < best_cost:
                     best_cost = cost_new
                     solution_new = solution.copy()
                     
                     best_op = operator
-                    best_iter = i
+                    
                     
                     print(best_cost)
                 else:
                     solution = solution_new.copy() 
                     
                 
-                print(i,"- ",best_cost,"      LLH = ",best_op)
+            print(i,"- ",best_cost,"      LLH = ",best_op)
+            Operaters(best_op)
+	
+            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+            
+            if cost_new < best_cost:
+                    best_cost = cost_new
+                    solution_new = solution.copy()
+                    
+                   
+                    best_iter = i
+                    
+                   # print(best_cost)
+            else:
+                    solution = solution_new.copy()
             
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
     #print(solution)
