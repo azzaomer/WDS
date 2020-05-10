@@ -182,8 +182,8 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     #solution_new = solution.copy()
                     best_op = operator
                     print(best_cost)
-                else:
-                    solution = solution_new.copy() 
+                #else:
+                    #solution = solution_new.copy() 
                     
                 
             print(i,"- ",best_cost,"      LLH = ",best_op)
