@@ -165,44 +165,44 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 
     #Select LLH using Greedy approach : 
     
-    for i in range(40):
+    for i in range(40000):
             #Selected LLH using Greedy approche :
-            print('i' , i)
+           # print('i' , i)
             #print('before_itr' ,solution)
             for j in range(11):
 	
-                print("#",j+1)
+                #print("#",j+1)
                 operator = j+1
                 
                 temp_solution = Operaters(operator) 
                 
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
-                print('costn', cost_n , 'bestc', best_c)
-                if cost_n < best_c:
+               # print('costn', cost_n , 'bestc', best_c)
+                if cost_n <= best_c:
                     best_c = cost_n
                     #solution_new = solution.copy()
                     best_op = operator
-                    print('yes',best_c)
+                  #  print('yes',best_c)
                 #else:
                      #solution = solution_new.copy() 
                     # print( 'no',cost_n)  
             #print('after_itr ' ,solution)
-            print("                                        LLH = ",best_op)
+           # print("                                        LLH = ",best_op)
             
             solution=Operaters(best_op)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
             #print(cost_new)
-            if cost_new < best_cost:
+            if cost_new <= best_cost:
                     best_cost = cost_new
                     solution_new = solution.copy()
     
                     best_iter = i
                     
-                    print('iteration improved cost=' , best_cost)
+                  #  print('iteration improved cost=' , best_cost)
             else:
                     solution = solution_new.copy() 
-                    print('iteration didnt improved cost')
+                   # print('iteration didnt improved cost')
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
     #print(solution)
  
@@ -210,12 +210,13 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
    
 ##################################################LLHs :##########################################################
 #1- change one pipe
+ #1- change one pipe
 def Change(solution, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1)
     return solution
-# 2- change 2 pipes randomly :
 
+ # 2- change 2 pipes randomly :
 def ChangeTowPipes(solution, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1) 
@@ -223,64 +224,56 @@ def ChangeTowPipes(solution, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1)
     return solution
+
 # 3- swap operator :
-def swap_random(solution):
+def Swap_random(solution):
      idx = range(len(solution))
      i1, i2 = random.sample(idx, 2)
      solution[i1], solution[i2] = solution[i2], solution[i1] 
-     #print(i1, i2)
      return solution
      
-     #Decrease :
-# 4-Decrease all pipe sizes by one:
-     
-def decreaseAllPipesByOne(solution):
+
+# 4-Increase or Decrease all pipe sizes by one:     
+def IncOrDecAllByOne(solution):
+        k = random.randint(1,2)
         for s in range(len(solution)):
-            if solution[s]>0:
-              solution[s] -= 1
+        #Increase   
+            if(solution[s] < (NumberOfPipeSizesAvailable-1) and k==2):
+                solution[s] += 1
+        #Decrease
+            elif(solution[s] > 0 and k==1):
+                solution[s] -= 1
+             
+                
         return solution
               
-     #5-decrease a randomly selected pipe diameter by one pipe size:
-def RandomlyDecrease(solution,NumberOfPipeSizesAvailable):
+#5-Increase or decrease a randomly selected pipe diameter by one pipe size:
+def IncOrDecRandomly(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
-    if solution[s] > 0:
-        solution[s] -= 1
-    #print("changed pipe index = ",s)
-    return solution
-    #increase :
-#6- Increase all pipes :
-def IncreaseAllPipesBy1(solution):
-     for s in range(len(solution)):
-         if solution[s]<(NumberOfPipeSizesAvailable-1):
-           solution[s] += 1
-     return solution
-#7- Randomly Increase one pipe :
-def RandomlyIncrease(solution,NumberOfPipeSizesAvailable):
-    s = random.randint(0, len(solution) - 1)
-    if solution[s] < (NumberOfPipeSizesAvailable-1):
+    k = random.randint(1,2)
+    #Increase
+    if(solution[s] < (NumberOfPipeSizesAvailable-1) and k==1):
         solution[s] += 1
-    #print("changed pipe index = ",s)
+    #Decrease
+    elif (solution[s] > 0 and k==2):
+        solution[s] -= 1    
     return solution
-#8- randomly change from 1 to 5 pipes :
-def changeInRange(solution,NumberOfPipeSizesAvailable):
-    k = random.randint(1,6)
+  
+#6- randomly change from 1 to 5 pipes :
+def ChangeInRange(solution,NumberOfPipeSizesAvailable):
+    k = random.randint(1,5)
     #print(k ," pipes will be changed")
     idx= range(len(solution))
     s= random.sample(idx,k)
-    #print(s)
+    ##print(s)
     for i in range(len(s)):
         solution[s[i]]=random.randint(0,NumberOfPipeSizesAvailable-1)
-    #print(solution)
     return solution
-# 9- randomly change all pipes :
-def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
-    for s in range(NumberOfPipes):
-        solution[s] = random.randint(0, NumberOfPipeSizesAvailable - 1)
-    return solution
-#10-randomly initalize solution and pick 2 random pipes increase one and decrease one
-def NewMethod1(NumberOfPipes,NumberOfPipeSizesAvailable):
-    i = random.randint(0,NumberOfPipeSizesAvailable-1)
-    solution = [i] * NumberOfPipes
+   
+
+#7-randomly initalize solution and pick 2 random pipes increase one and decrease one
+def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
+    
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
         solution[s] += 1
@@ -288,9 +281,9 @@ def NewMethod1(NumberOfPipes,NumberOfPipeSizesAvailable):
     if solution[r] > 0 and r!= s:
         solution[r] -= 1
     return solution
-#11-intialize solution to average pipe size and pick 4 rando pipes +2 and -2
-def NewMethod2(NumberOfPipes,NumberOfPipeSizesAvailable):
-    solution = [6] * NumberOfPipes
+
+#8-pick 4 rando pipes +2 and -2
+def IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
         solution[s] += 1
@@ -304,7 +297,14 @@ def NewMethod2(NumberOfPipes,NumberOfPipeSizesAvailable):
     if solution[n] > 0 and n!=s and n!=p and n!=r:
         solution[n] -= 1
     return solution
-#Dictionary mapping for functions 
+#9
+def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
+    for s in range(NumberOfPipes):
+            solution[s] = random.randint(0, NumberOfPipeSizesAvailable - 1) 
+    return solution
+    
+
+
 def Operaters(LLH):
     result = solution
    # print ('LLH' , LLH)
@@ -314,24 +314,20 @@ def Operaters(LLH):
     elif LLH == 2 :
         result = ChangeTowPipes(operator_sol, NumberOfPipeSizesAvailable)
     elif LLH == 3:
-        result = swap_random(operator_sol)
+        result = Swap_random(operator_sol)
     elif LLH == 4:
-        result = RandomlyDecrease(operator_sol,NumberOfPipeSizesAvailable)
+        result = IncOrDecAllByOne(operator_sol)
     elif LLH == 5:
-        result = RandomlyDecrease(operator_sol,NumberOfPipeSizesAvailable)
+        result = IncOrDecRandomly(operator_sol,NumberOfPipeSizesAvailable)
     elif LLH == 6:
-        result = IncreaseAllPipesBy1(operator_sol)
+        result = ChangeInRange(operator_sol,NumberOfPipeSizesAvailable)
     elif LLH == 7:
-        result =RandomlyIncrease(operator_sol,NumberOfPipeSizesAvailable)
+        result =IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable)
     elif LLH == 8:
-        result =changeInRange(operator_sol,NumberOfPipeSizesAvailable)
+        result =IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable)
     elif LLH == 9:
         result =Randomise(operator_sol, NumberOfPipes, NumberOfPipeSizesAvailable)
-    elif LLH == 10:
-        result= NewMethod1(NumberOfPipes,NumberOfPipeSizesAvailable)
-    elif LLH == 11:
-        result= NewMethod2(NumberOfPipes,NumberOfPipeSizesAvailable)
-    
+
     return result
 
 #    
