@@ -169,7 +169,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
             #Selected LLH using Greedy approche :
            # print('i' , i)
             #print('before_itr' ,solution)
-            for j in range(8):
+            for j in range(9):
 	
                 #print("#",j+1)
                 operator = j+1
