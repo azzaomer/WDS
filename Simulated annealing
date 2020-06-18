@@ -155,17 +155,16 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     print(cost)
     print(solution)
     
-    while t > 0.01:
-        i = 0
-        
-        for i in range(10):
+   
+    for i in range(1000):
+        if t > 0:
             
             Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
        
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
             delta_E= cost - cost_new
             if delta_E >= 0 :
-           # if cost_new <= cost:
+           
                 cost = cost_new
                 solution_new = solution.copy()
                 
@@ -181,7 +180,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
             
         t=  alpha * t
             
-        #print('t',t)
+        print('t',t)
     best_cost= cost
     print('best cost = ',best_cost )
         
