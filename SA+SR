@@ -181,7 +181,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
             elif (math.exp(-delta_E / t) >= random.randint(0,1)):
                 best_cost = cost_new
                 solution_new = solution.copy()
-                #best_iter=i
+                best_iter=i
                 best_op = operator
 
                 print('worse',cost)
