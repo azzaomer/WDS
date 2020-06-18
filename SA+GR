@@ -147,10 +147,9 @@ def ReadFile(f_name):
     return data
 
 def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
-    
+    delta_E= 0
     alpha= 0.9
     t= 100
-    delta_E_g= 0
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     solution_new = solution.copy()
     
@@ -167,7 +166,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     best_op = 0
 
     #Select LLH using Greedy approach : 
-    if t > 0.01: 
+    if t > 0: 
         
        for i in range(30):
             #Selected LLH using Greedy approche :
@@ -183,35 +182,22 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
                 print('costn', cost_n , 'bestc', best_c)
-###################################################################################################################
-                ##while t_g > 0.01:
+#################################################################################################################
                  
         
-                  
+                if cost_n <= best_c:
+                    best_c = cost_n
+                    best_op = operator
+                    print('yes',best_c)
+                
+            print("                                        LLH = ",best_op) 
             
-                delta_E_g= best_c - cost_n
-                if delta_E_g >= 0 :
-                         
-                         best_c = cost_n
-                         best_op = operator
-                         
-                elif (math.exp( delta_E_g / t ) > random.randint(0,1)):
-                            cost = cost_n
-                            best_op = operator
-                            
-            
-       #t_g=  alpha * t_g
-            
-            print("                                        LLH = ",best_op)
- ################################################################################################################3           
+ ################################################################################################################           
             solution=Operaters(best_op)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
             print('cost_new calcutated by best op',cost_new)
             
-            #t= 100
-            delta_E= 0
             
-            #while t > 0.01:
         
             delta_E= best_cost - cost_new
             if delta_E >= 0 :
