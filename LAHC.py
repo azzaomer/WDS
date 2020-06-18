@@ -154,10 +154,10 @@ def ReadFile(f_name):
 
 def LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
     
-    #1- calculate intial solution
+    #1- calculate intial cost
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     
-    #2- calculate initial cost
+    #2- calculate initial soltion
     solution_new = solution.copy()
     print(cost)
     
