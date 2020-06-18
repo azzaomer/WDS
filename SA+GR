@@ -166,9 +166,10 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     best_op = 0
 
     #Select LLH using Greedy approach : 
-    if t > 0: 
-        
-       for i in range(30):
+   
+    while t>0.01:     
+     for i in range(30000):
+            
             #Selected LLH using Greedy approche :
             print('i' , i)
             #print('before_itr' ,solution)
@@ -182,7 +183,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
                 print('costn', cost_n , 'bestc', best_c)
-#################################################################################################################
+################################################################################################################
                  
         
                 if cost_n <= best_c:
@@ -198,43 +199,26 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
             print('cost_new calcutated by best op',cost_new)
             
             
-        
+            
             delta_E= best_cost - cost_new
             if delta_E >= 0 :
                   best_cost = cost_new
                   solution_new = solution.copy()
-                  best_iter = i
+                  
                   
             elif (math.exp( delta_E / t ) > random.randint(0,1)):
                   best_cost = cost_new
                   solution_new = solution.copy()
-                  best_iter=i
+                 
             else:
                   solution=solution_new.copy();
                 
-                
-               
-            
-       t=  alpha * t
+            t=  alpha * t
             
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
     print(solution)        
-##############################################################################################################            
-           #if cost_new <= best_cost:
-            #        best_cost = cost_new
-             #       solution_new = solution.copy()
-    
-              #      best_iter = i
-                    
-               #     print('iteration improved cost=' , best_cost)
-            #else:
-             #       solution = solution_new.copy() 
-              #      print('iteration didnt improved cost')
-    #print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
-    #print(solution) //
- 
 
-   
+  
 ##################################################LLHs :##########################################################
 #1- change one pipe
  #1- change one pipe
