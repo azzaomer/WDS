@@ -146,7 +146,7 @@ def ReadFile(f_name):
 
 def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
     alpha= 0.9
-    t= 100
+    t= 10
     delta_E= 0
     best_cost=0
     
@@ -155,9 +155,9 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     print(cost)
     print(solution)
     
-   
-    for i in range(1000):
-        if t > 0:
+    while t>0.01:
+         for i in range(20000):
+      
             
             Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
        
@@ -168,19 +168,19 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 cost = cost_new
                 solution_new = solution.copy()
                 
-                #print(solution)
+                print('better',cost)
             elif (math.exp( delta_E / t ) > random.randint(0,1)):
                 cost = cost_new
                 solution_new = solution.copy()
+                print('worse',cost)
             else:
                 solution=solution_new.copy();
                 
                 
                 #print(cost)
+            t=  alpha * t
             
-        t=  alpha * t
-            
-        print('t',t)
+         print('t',t)
     best_cost= cost
     print('best cost = ',best_cost )
         
