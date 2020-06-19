@@ -178,7 +178,7 @@ def LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAva
             v = i % k
             
             #move acceptance
-            if cost_new <= l[v]:
+            if cost_new < l[v]:
                 best_cost = cost_new
                 solution_new = solution.copy()
                 best_iter = i
