@@ -157,7 +157,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     best_cost = cost
     best_iter = 0
     best_op = 0
-    while t>0.01:
+    if t>0.01:
          for i in range(400):
              
             #Select LLH using simple random method (SR):
