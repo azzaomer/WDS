@@ -162,7 +162,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
          for i in range(400):
              
             #Select LLH using simple random method (SR):
-            operator = random.randint(1,9)
+            
             Operaters(operator)
      
             #calculate the new cost
