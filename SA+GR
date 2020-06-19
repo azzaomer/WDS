@@ -166,7 +166,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     best_op = 0
 
     #Select LLH using Greedy approach : 
-    while t>0.01:    
+    if t>0.01:    
      for i in range(40000):
         
             
