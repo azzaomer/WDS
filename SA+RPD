@@ -166,7 +166,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
          for i in range(4):
              
             #Select LLH using  random permutation method (RP):
-            op = permutation[i%len(permutation)]
+            #op = permutation[i%len(permutation)]
             solution = Operaters(op)
             print(permutation)
             #calculate the new cost
