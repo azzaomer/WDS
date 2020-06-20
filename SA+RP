@@ -157,7 +157,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     best_cost = cost
     best_iter = 0
     best_op = 0
-    if t>0.01:
+    if true:
          #Select LLH using Random Permutation RDP :
          permutation = np.random.permutation([1,2,3,4,5,6,7,8,9])
          for i in range(4):
