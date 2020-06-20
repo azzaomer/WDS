@@ -167,8 +167,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     
     for i in range(40000):
             #Selected LLH using Greedy approche :
-           # print('i' , i)
-            #print('before_itr' ,solution)
+       
             for j in range(9):
 	
                 #print("#",j+1)
@@ -178,33 +177,29 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                 
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
-               # print('costn', cost_n , 'bestc', best_c)
+               
                 if cost_n <= best_c:
                     best_c = cost_n
-                    #solution_new = solution.copy()
                     best_op = operator
-                  #  print('yes',best_c)
-                #else:
-                     #solution = solution_new.copy() 
-                    # print( 'no',cost_n)  
-            #print('after_itr ' ,solution)
-           # print("                                        LLH = ",best_op)
+                
+               
+            # print("                                        LLH = ",best_op)
             
             solution=Operaters(best_op)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-            #print(cost_new)
+            
             if cost_new <= best_cost:
                     best_cost = cost_new
                     solution_new = solution.copy()
     
                     best_iter = i
                     
-                  #  print('iteration improved cost=' , best_cost)
+                    print('iteration improved cost=' , best_cost)
             else:
                     solution = solution_new.copy() 
-                   # print('iteration didnt improved cost')
+                    print('iteration didnt improved cost')
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
-    #print(solution)
+    
  
 
    
