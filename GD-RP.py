@@ -161,7 +161,7 @@ def GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailabl
     level = cost 
     beta = 0.01
     
-    #Select LLH using Random Permutation RDP :
+    #Select LLH using Random Permutation RD :
     permutation = np.random.permutation([1,2,3,4,5,6,7,8,9])
 
     for i in range(40000):
