@@ -156,7 +156,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     best_iter = 0
     best_op = 0
    
-    #Select LLH using Random Permutation RDP :
+    #Select LLH using Random Permutation RP :
     permutation = np.random.permutation([1,2,3,4,5,6,7,8,9])
 
     for i in range(40000):
