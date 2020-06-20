@@ -155,7 +155,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     print(cost)
     print(solution)
     
-    if t>0.01:
+    if True:
          for i in range(40000):
       
             
