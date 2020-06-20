@@ -165,7 +165,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     #
     i=0
     
-    #Select LLH using Random Permutation RDP :
+    #Select LLH using Random Permutation RPD :
     permutation = np.random.permutation([1,2,3,4,5,6,7,8,9])
     print(permutation)
     
