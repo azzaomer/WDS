@@ -162,7 +162,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
              
             #Select LLH using simple random method (SR):
             operator = random.randint(1,9)
-            Operaters(operator)
+            solution = Operaters(operator)
      
             #calculate the new cost
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
