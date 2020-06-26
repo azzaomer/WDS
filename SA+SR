@@ -151,18 +151,20 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
     delta_E= 0
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     solution_new = solution.copy()
+    
+    solution_best = solution.copy()
     print(cost)
     print(solution)
         
     best_cost = cost
     best_iter = 0
-    best_op = 0
+    op = [0] * 9
     if True:
-         for i in range(400):
+         for i in range(100000):
              
             #Select LLH using simple random method (SR):
-            operator = random.randint(1,9)
-            solution = Operaters(operator)
+            operator = random.randint(0,8)
+            solution = Operaters(operator + 1)
      
             #calculate the new cost
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
@@ -170,23 +172,26 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
             #move acceptance :
             delta_E= cost_new - best_cost
             if delta_E < 0 :
-           
+                #to keep the best cost and dont loose it
                 best_cost = cost_new
-                solution_new = solution.copy()
+                solution_best = solution.copy()
                 best_iter=i
-                best_op = operator
-
-                print('better',cost)
-                
+                op[operator] += 1
+                print(best_iter,best_cost)
+            
+            if cost_new <= cost :
+                cost = cost_new
+                solution_new = solution.copy()
+              
+               
+            
             elif (math.exp(-delta_E / t) >= random.randint(0,1)):
-                best_cost = cost_new
+            #elif (cost_new <= best_cost +  0.03*best_cost): # record to record
+                cost = cost_new
                 solution_new = solution.copy()
-                best_iter=i
-                best_op = operator
-
-                print('worse',cost)
+               
             else:
-                solution=solution_new.copy();
+                solution=solution_new.copy()
                 
                 
                 #print(cost)
@@ -194,7 +199,9 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
             
        #  print('t',t)
         
-    print("   best cost = ",best_cost,"   iteration = ",best_iter,"   LLH ",best_op)
+    solution=solution_best.copy()
+    print(solution)
+    print("   best cost = ",best_cost,"   iteration = ",best_iter,"   LLH =",op)
    
     
 ##################################################LLHs :##########################################################
@@ -345,5 +352,6 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
 
 
