@@ -167,7 +167,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
 
     #Select LLH using Greedy approach : 
     #if t>0:    
-    for i in range(4000):
+    for i in range(40):
         
   #############################################################################################################          
             #Selected LLH using Greedy approche :
@@ -180,7 +180,8 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 
                 if cost_n < best_c:
                     best_c = cost_n
-                    best_op = operator+1
+                    best_op = operator
+                  
                   
  ################################################################################################################           
             solution=Operaters(best_op)
@@ -194,7 +195,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 best_cost = cost_new
                 solution_best = solution.copy()
                 best_iter=i
-                op[operator] += 1
+                op[best_op] += 1
                 print(best_iter,best_cost)
             
             if cost_new <= cost :
@@ -213,7 +214,8 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 
                 
             t=  alpha * t
-            best_c = best_cost    
+            best_c = best_cost 
+	    
     solution=solution_best.copy() 
     print(solution)       
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",op)
