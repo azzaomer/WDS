@@ -153,22 +153,24 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     #2- calculate initial solution
     
     solution_new = solution.copy()
+    solution_best = solution.copy()
     print(cost)
-    
+    print(solution)
+        
     best_cost = cost
     best_iter = 0
-    best_op = 0
+    op = [0] * 9
     
     #3-specify L :
     k=1000
     l = [cost]*k
-    
     i=0
+    
     while (i <= 40000):
         
         #Select LLH using simpel random method (SR): 
-        operator = random.randint(1,9)
-        solution = Operaters(operator)
+        operator = random.randint(0,8)
+        solution = Operaters(operator+1)
      
         
         #calculate the new cost
@@ -177,19 +179,31 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
         v = i % k
 
         #move acceptance
+        if cost_new < best_cost:
+                best_cost = cost_new
+                solution_best = solution.copy()
+                best_iter=i
+                op[operator] += 1
+                print(best_iter,best_cost)
+            
+        if cost_new <= cost :
+                cost = cost_new
+                solution_new = solution.copy()
+             
         if cost_new < l[v]:
-            best_cost = cost_new
+            cost = cost_new
             solution_new = solution.copy()
-            best_iter = i
-            print(best_cost)
+            
+            
         else:
             solution = solution_new.copy()
                 
         #Include objective value in the list
         l[v] = cost_new
         i+=1
-        
-    print("the best cost = " ,best_cost,"   at iteration = ",best_iter,"LLH = ",best_op)
+    
+    solution=solution_best.copy()    
+    print(best_cost,"    i = ",best_iter,"    ",op)
        
     
 
@@ -257,7 +271,7 @@ def ChangeInRange(solution,NumberOfPipeSizesAvailable):
    
 
 #7-randomly initalize solution and pick 2 random pipes increase one and decrease one
-def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
@@ -268,7 +282,7 @@ def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
     return solution
 
 #8-pick 4 rando pipes +2 and -2
-def IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
         solution[s] += 1
@@ -298,8 +312,8 @@ def Operaters(LLH):
         4: lambda :IncOrDecAllByOne(solution),
         5: lambda :IncOrDecRandomPipe(solution,NumberOfPipeSizesAvailable),
         6: lambda :ChangeInRange(solution,NumberOfPipeSizesAvailable),
-        7: lambda :IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable),
-        8: lambda :IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable),
+        7: lambda :IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable),
+        8: lambda :IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable),
         9: lambda :Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
     }
     # Get the function from switcher dictionary
