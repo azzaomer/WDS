@@ -149,49 +149,56 @@ def ReadFile(f_name):
 def GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
 
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
     solution_new = solution.copy()
-    print(cost)
+    solution_best = solution.copy()
     
     best_cost = cost
     best_iter = 0
-    best_op = 0
-    
+
+    op = [0] * 9
     #Great deuge varuiables:
     level = cost 
-    beta = 0.01
-
-    #Select LLH using Random Descent method (RD):
-    operator = random.randint(1,9)
+    beta = 0.1
     
+    operator = random.randint(0,8)
+
     for i in range(40000):
-            
-            solution = Operaters(operator)
-            #calculate the new cost :
-            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-           
-            #move acceptance (greate deluge) :
-            if (cost_new < best_cost) or (cost_new < level):
-                best_cost = cost_new
-                best_iter = i
-                best_op = best_op
-                solution_new = solution.copy()   
-                print(best_cost)
-            else:
-                solution = solution_new.copy()
-                #change the operator randomly :
-                operator = random.randint(1,9)
-                
-            #update level:
-            level = level - beta
-	
         
-    print("best cost = " ,best_cost,"   i= ",best_iter,"   LLH ",best_op)
-    print(solution)
+        #Select LLH using simpel random method (SR): 
+        
+        solution = Operaters(operator + 1)
+     
+        
+        #calculate the new cost
+        cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+           
+
+        #move acceptance (greate deluge) :
+        if  cost_new < best_cost :
+                best_cost = cost_new
+                solution_best = solution.copy()
+                best_iter=i
+                op[operator] += 1
+                print(best_iter,best_cost)
+        if (cost_new < cost) or (cost_new < level):
+                cost = cost_new
+                solution_new = solution.copy()   
+                
+        else:
+                solution = solution_new.copy()
+                operator = random.randint(0,8)
+        #update level:
+        level = level - beta
+    solution=solution_best.copy()
+    print(solution)    
+    print("best cost = " ,best_cost,"   i= ",best_iter,"    LLH = ",op)
+       
     
 
    
 ##################################################LLHs :##########################################################
-   #1- change one pipe
+ #1- change one pipe
 def Change(solution, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1)
@@ -301,7 +308,6 @@ def Operaters(LLH):
     # Get the function from switcher dictionary
     func = switcher.get(LLH, lambda: "Invalid operator")
     return func()
-    
 ##################################################################################################################
 
     
@@ -337,3 +343,5 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
+
