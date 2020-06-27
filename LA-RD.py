@@ -146,18 +146,19 @@ def ReadFile(f_name):
 
     return data
 
-def LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
+def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
     
     #1- calculate intial cost
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     
     #2- calculate initial solution
     solution_new = solution.copy()
+    solution_best = solution.copy()
     print(cost)
     
     best_cost = cost
     best_iter = 0
-    best_op = 0
+    op = [0]*9
     
     #3-specify L :
     k=1000
@@ -166,34 +167,43 @@ def LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAva
     i=0
 
     #Select LLH using Random Descent method (RD):
-    operator = random.randint(1,9)
+    operator = random.randint(0,8)
     
     while (i <= 40000):
             
-            solution = Operaters(operator)
+           solution = Operaters(operator+1)
              
             #f'(S')
-            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+           cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
         
-            v = i % k
+           v = i % k
             
-            #move acceptance
-            if cost_new < l[v]:
+           #move acceptance
+           if cost_new < best_cost:
                 best_cost = cost_new
+                solution_best = solution.copy()
+                best_iter=i
+                op[operator] += 1
+                print(best_iter,best_cost)
+            
+           if cost_new <= cost :
+                cost = cost_new
                 solution_new = solution.copy()
-                best_iter = i
-                print(best_cost)
-            else:
+             
+           elif cost_new < l[v]:
+               cost = cost_new
+               solution_new = solution.copy()
+           else:
                 solution = solution_new.copy()
                 #change the operator randomly :
-                operator = random.randint(1,9)
+                operator = random.randint(0,8)
            
             #Include objective value in the list
-            l[v] = cost_new
-            i+=1
+           l[v] = cost
+           i+=1
 	
-        
-    print("best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH ",best_op)
+    solution=solution_best.copy()    
+    print(best_cost,"   i",best_iter,"   LLH ",op)
     print(solution)
     
 
@@ -344,4 +354,4 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 
 solution = [1] * NumberOfPipes
 
-LateAcceptanceHC(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)

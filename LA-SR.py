@@ -162,7 +162,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     op = [0] * 9
     
     #3-specify L :
-    k=1000
+    k=55000
     l = [cost]*k
     i=0
     
@@ -199,7 +199,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
             solution = solution_new.copy()
                 
         #Include objective value in the list
-        l[v] = cost_new
+        l[v] = cost
         i+=1
     
     solution=solution_best.copy()    

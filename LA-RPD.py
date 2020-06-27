@@ -153,28 +153,30 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     #2- calculate initial solution
     
     solution_new = solution.copy()
+    solution_best = solution.copy()
     print(cost)
     
     best_cost = cost
     best_iter = 0
-    best_op = 0
+    op = [0] * 9
     
     #3-specify L :
     k=10
     l = [cost]*k
+    
     #
     i=0
     
-    #Select LLH using Random Permutation RPD :
-    permutation = np.random.permutation([1,2,3,4,5,6,7,8,9])
+    #Select LLH using Random Permutation RDP :
+    permutation = np.random.permutation([0,1,2,3,4,5,6,7,8])
     print(permutation)
     
-    op = permutation[i%len(permutation)]
+    operator = permutation[i%len(permutation)]
     j=0
     
-    while (i <= 4):
+    while (i <= 40000):
             
-        Operaters(op)
+        solution = Operaters(operator+1)
         
         #4-f'(S')
         cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
@@ -182,24 +184,33 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
         v = i % k
 
         #move acceptance
+        if cost_new < best_cost:
+                best_cost = cost_new
+                solution_best = solution.copy()
+                best_iter=i
+                op[operator] += 1
+                print(best_iter,best_cost)
+            
+        if cost_new <= cost :
+                cost = cost_new
+                solution_new = solution.copy()
+             
         if cost_new < l[v]:
-            best_cost = cost_new
+            cost = cost_new
             solution_new = solution.copy()
-            best_iter = i
-            print(best_cost)
         else:
             solution = solution_new.copy()
             j+=1
             op = permutation[j%len(permutation)]
             
         #Include objective value in the list
-        l[v] = cost_new
+        l[v] = cost
         i+=1
                  
                
 	
-        
-    print("the best cost = " ,best_cost,"   at iteration = ",best_iter,"using LLH ",best_op)
+    solution=solution_best.copy()   
+    print(best_cost,"   i= ",best_iter,"   ",op)
     print(solution)
     print(permutation)
 
