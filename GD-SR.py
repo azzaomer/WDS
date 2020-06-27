@@ -151,39 +151,46 @@ def GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailabl
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
     solution_new = solution.copy()
-
+    solution_best = solution.copy()
+    
     best_cost = cost
     best_iter = 0
     best_op = 0
-    
+    op = [0] * 9
     #Great deuge varuiables:
     level = cost 
-    beta = 0.01
+    beta = 0.1
 
-    for i in range(40000):
+    for i in range(4000):
         
         #Select LLH using simpel random method (SR): 
-        operator = random.randint(1,9)
-        solution = Operaters(operator)
+        operator = random.randint(0,8)
+        solution = Operaters(operator + 1)
      
         
         #calculate the new cost
         cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
            
+
         #move acceptance (greate deluge) :
-        if (cost_new < best_cost) or (cost_new < level):
+        if  cost_new < best_cost :
                 best_cost = cost_new
-                best_iter = i
-                best_op = best_op
+                solution_best = solution.copy()
+                best_iter=i
+                op[operator] += 1
+                print(best_iter,best_cost)
+        if (cost_new < cost) or (cost_new < level):
+                cost = cost_new
                 solution_new = solution.copy()   
-                print(best_cost)
+                
         else:
                 solution = solution_new.copy()
                 
         #update level:
         level = level - beta
-        
-    print("best cost = " ,best_cost,"   i= ",best_iter,"    LLH = ",best_op)
+    solution=solution_best.copy()
+    print(solution)    
+    print("best cost = " ,best_cost,"   i= ",best_iter,"    LLH = ",op)
        
     
 
@@ -334,6 +341,5 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-
 
 
