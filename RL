@@ -158,10 +158,10 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     #LLH = [0,1,2,3,4,5,6,7,8,]
     LLHS = [0.5] * 9
     beta = 0
-    alpha = 10000
+    alpha = 1000
     reward = 0.003
     penatiltyW = 0.000625
-    penaltiyF = 0.0005
+    penalityF =  0.0005
     #print('llhs',LLHS)
     for j in range(40000):
         
@@ -179,19 +179,19 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                    best_cost = cost_new
                    solution_best = solution.copy()
                    best_iter=j
-            elif beta > alpha and cost_new < 4 * cost:
+            elif beta > alpha and cost_new <  4 * cost:
                  cost = cost_new
                  LLHS = [0.5] * 9
                  beta = 0
-                 solution_new = solution.copy()
-
+                 solution = solution_new.copy()
+                #NAsolution_new = solution.copy()
              
             else:
-            	LLHS[operator] -= j * penatiltyW
-            	beta += 1
-            solution = solution_new.copy()
+                LLHS[operator] -= j * penatiltyW
+                beta += 1
+                solution = solution_new.copy()
         else:
-             LLHS[operator] -= j * penaltiyF
+             LLHS[operator] -= j * penalityF
              beta += 10 
              solution=solution_new.copy()       
     solution=solution_best.copy()
