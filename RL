@@ -183,8 +183,8 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                  cost = cost_new
                  LLHS = [0.5] * 9
                  beta = 0
-                 solution = solution_new.copy()
-                ##solution_new = solution.copy()
+                 
+                 solution_new = solution.copy()
              
             else:
                 LLHS[operator] -= j * penatiltyW
