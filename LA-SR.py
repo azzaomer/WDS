@@ -145,6 +145,14 @@ def ReadFile(f_name):
         [data.append(line.split()) for line in infile]
 
     return data
+def shuffle(solution):
+    k = random.randint(1,5)
+    idx= range(len(solution))
+    s = random.sample(idx,k)
+    random.shuffle(s)
+    
+    
+    return solution
 
 def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
     
@@ -171,6 +179,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
         #Select LLH using simpel random method (SR): 
         operator = random.randint(0,8)
         solution = Operaters(operator+1)
+        
      
         
         #calculate the new cost
@@ -203,7 +212,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
         i+=1
     
     solution=solution_best.copy()    
-    print(best_cost,"    i = ",best_iter,"    ",op)
+    print("best cost = " ,best_cost,"    i = ",best_iter,"    ",op)
        
     
 
@@ -282,6 +291,8 @@ def IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     return solution
 
 #8-pick 4 rando pipes +2 and -2
+    
+
 def IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
@@ -296,6 +307,7 @@ def IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     if solution[n] > 0 and n!=s and n!=p and n!=r:
         solution[n] -= 1
     return solution
+
 #9
 def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
     for s in range(NumberOfPipes):

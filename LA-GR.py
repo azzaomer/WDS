@@ -148,68 +148,77 @@ def ReadFile(f_name):
 
 def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
     
-    #1- calculate intial cost
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-    
-    #2- calculate initial solution
     solution_new = solution.copy()
-    solution_best = solution.copy()
+    
+    print("the initial solution")
+    print(solution)
     print(cost)
     
+    #defined variables :
     best_cost = cost
-    best_iter = 0
-    op = [0]*9
     
-    #3-specify L :
+    best_c=cost
+    
+    best_iter = 0
+    best_op = 0
     k=55000
     l = [cost]*k
-    #
-    i=0
-
-    #Select LLH using Random Descent method (RD):
-    operator = random.randint(0,8)
     
-    while (i <= 40000):
+    i=0
+    
+    op = [0]*9
+    #Select LLH using Greedy approach :  
+    while i < 40000:
+            #Selected LLH using Greedy approche :
+            for j in range(9):
+
+                operator = j
+                temp_solution = Operaters(operator+1) 
+                
+                cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
             
-           solution = Operaters(operator+1)
-             
-            #f'(S')
-           cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-        
-           v = i % k
+                if cost_n <= best_c:
+                    best_c = cost_n
+                    best_op = operator
+                
             
-           #move acceptance
-           if cost_new < best_cost:
+            solution=Operaters(best_op)
+            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+            v = i % k
+             #move acceptance
+            if cost_new < best_cost:
                 best_cost = cost_new
                 solution_best = solution.copy()
                 best_iter=i
                 op[operator] += 1
                 print(best_iter,best_cost)
             
-           if cost_new <= cost :
+            if cost_new <= cost :
                 cost = cost_new
                 solution_new = solution.copy()
              
-           elif cost_new < l[v]:
-               cost = cost_new
-               solution_new = solution.copy()
-           else:
-                solution = solution_new.copy()
-                #change the operator randomly :
-                operator = random.randint(0,8)
+            elif cost_new < l[v]:
+                cost = cost_new
+                solution_new = solution.copy()
            
+            else:
+              solution = solution_new.copy()
+                
             #Include objective value in the list
-           l[v] = cost
-           i+=1
-	
-    solution=solution_best.copy()    
-    print("best cost = " ,best_cost,"    i = ",best_iter,"    ",op)
-    print(solution)
+            best_c = best_cost
+            l[v] = cost
+            i+=1
     
+    solution = solution_best .copy()
+    print("best cost = " ,best_cost,"    i = ",best_iter,"    ",op)
+    #print(solution)
+ 
 
    
 ##################################################LLHs :##########################################################
-   #1- change one pipe
+#1- change one pipe
+ #1- change one pipe
 def Change(solution, NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     solution[s] =  random.randint(0, NumberOfPipeSizesAvailable - 1)
@@ -247,7 +256,7 @@ def IncOrDecAllByOne(solution):
         return solution
               
 #5-Increase or decrease a randomly selected pipe diameter by one pipe size:
-def IncOrDecRandomPipe(solution,NumberOfPipeSizesAvailable):
+def IncOrDecRandomly(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     k = random.randint(1,2)
     #Increase
@@ -302,24 +311,34 @@ def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
             solution[s] = random.randint(0, NumberOfPipeSizesAvailable - 1) 
     return solution
     
-#Dictionary mapping for functions 
+
+
 def Operaters(LLH):
-  
-    switcher = {
-        1: lambda :Change(solution, NumberOfPipeSizesAvailable),
-        2: lambda :ChangeTowPipes(solution, NumberOfPipeSizesAvailable),
-        3: lambda :Swap_random(solution),
-        4: lambda :IncOrDecAllByOne(solution),
-        5: lambda :IncOrDecRandomPipe(solution,NumberOfPipeSizesAvailable),
-        6: lambda :ChangeInRange(solution,NumberOfPipeSizesAvailable),
-        7: lambda :IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable),
-        8: lambda :IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable),
-        9: lambda :Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
-    }
-    # Get the function from switcher dictionary
-    func = switcher.get(LLH, lambda: "Invalid operator")
-    return func()
-    
+    result = solution
+   # print ('LLH' , LLH)
+    operator_sol = solution.copy()
+    if LLH == 1 :
+        result =  Change(operator_sol, NumberOfPipeSizesAvailable)
+    elif LLH == 2 :
+        result = ChangeTowPipes(operator_sol, NumberOfPipeSizesAvailable)
+    elif LLH == 3:
+        result = Swap_random(operator_sol)
+    elif LLH == 4:
+        result = IncOrDecAllByOne(operator_sol)
+    elif LLH == 5:
+        result = IncOrDecRandomly(operator_sol,NumberOfPipeSizesAvailable)
+    elif LLH == 6:
+        result = ChangeInRange(operator_sol,NumberOfPipeSizesAvailable)
+    elif LLH == 7:
+        result =IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable)
+    elif LLH == 8:
+        result =IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable)
+    elif LLH == 9:
+        result =Randomise(operator_sol, NumberOfPipes, NumberOfPipeSizesAvailable)
+
+    return result
+
+#    
 ##################################################################################################################
 
     
@@ -355,3 +374,6 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
+
+

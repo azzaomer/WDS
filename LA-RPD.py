@@ -161,7 +161,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     op = [0] * 9
     
     #3-specify L :
-    k=10
+    k=55000
     l = [cost]*k
     
     #
@@ -201,7 +201,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
         else:
             solution = solution_new.copy()
             j+=1
-            op = permutation[j%len(permutation)]
+            operator = permutation[j%len(permutation)]
             
         #Include objective value in the list
         l[v] = cost
@@ -210,11 +210,11 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
                
 	
     solution=solution_best.copy()   
-    print(best_cost,"   i= ",best_iter,"   ",op)
+    print("best cost = " ,best_cost,"    i = ",best_iter,"    ",op)
     print(solution)
     print(permutation)
 
-   
+  
 ##################################################LLHs :##########################################################
  #1- change one pipe
 def Change(solution, NumberOfPipeSizesAvailable):
@@ -359,7 +359,7 @@ NodesRequireHeadLevelDict = dict(NodesRequireHeadLevel)
 
 DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSizesAvailable*2 + NumberOfNodesRequireHeadLevels + 7][1])
 
-solution = [1] * NumberOfPipes
+solution = [6] * NumberOfPipes
 
 LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 

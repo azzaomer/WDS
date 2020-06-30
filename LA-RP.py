@@ -161,7 +161,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     op = [0] * 9
     
     #3-specify L :
-    k=1000 
+    k=55000 
     l = [cost]*k
     #
     i=0
@@ -173,7 +173,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     while (i <= 40000):
         #generate candidate solution :
         operator = permutation[i%len(permutation)]
-        Operaters(operator+1)
+        solution = Operaters(operator+1)
         
         #4-f'(S')
         cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
@@ -196,7 +196,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
         elif cost_new < l[v]:
             cost = cost_new
             solution_new = solution.copy()
-            print(best_cost)
+            
         else:
             solution = solution_new.copy()
             
@@ -208,7 +208,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
 	
     solution=solution_best.copy()
     print(solution)    
-    print("    " ,best_cost,"    i = ",best_iter,"  ",op)
+    print("best cost = " ,best_cost,"    i = ",best_iter,"    ",op)
     
     
 
