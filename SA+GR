@@ -167,7 +167,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
 
     #Select LLH using Greedy approach : 
     #if t>0:    
-    for i in range(40):
+    for i in range(100000):
         
   #############################################################################################################          
             #Selected LLH using Greedy approche :
@@ -180,7 +180,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 
                 if cost_n < best_c:
                     best_c = cost_n
-                    best_op = operator
+                    best_op = operator+1
                   
                   
  ################################################################################################################           
@@ -380,5 +380,6 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
 
 
