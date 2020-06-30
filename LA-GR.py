@@ -162,7 +162,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     
     best_iter = 0
     best_op = 0
-    k=55000
+    k=50000
     l = [cost]*k
     
     i=0
@@ -180,7 +180,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
             
                 if cost_n <= best_c:
                     best_c = cost_n
-                    best_op = operator
+                    best_op = operator+1
                 
             
             solution=Operaters(best_op)
@@ -374,6 +374,5 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-
 
 
