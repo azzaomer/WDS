@@ -195,7 +195,7 @@ def Simulated_annealing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSize
                 best_cost = cost_new
                 solution_best = solution.copy()
                 best_iter=i
-                op[best_op] += 1
+                op[operator] += 1
                 print(best_iter,best_cost)
             
             if cost_new <= cost :
