@@ -180,10 +180,10 @@ def GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailabl
                 
                 if cost_n <= best_c:
                     best_c = cost_n
-                    best_op = operator+1
+                    best_op = operator
                     
          ##########################################        
-        solution = Operaters(best_op)
+        solution = Operaters(best_op+1)
         cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
         if cost_new < best_cost:
