@@ -146,7 +146,7 @@ def ReadFile(f_name):
 
     return data
 
-def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
+def Reinforcement_Learning(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution):
 
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     
@@ -155,22 +155,22 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     
     best_cost = cost
     best_iter = 0
-    #LLH = [0,1,2,3,4,5,6,7,8,]
+    
     LLHS = [0.5] * 9
     beta = 0
-    alpha = 1000
-    reward = 0.003
-    penatiltyW = 0.000625
-    penalityF =  0.0005
+    alpha = 100
+    reward = 0.3
+    penalityW = 0.0625
+    #penaltiyF = 0.0005
     #print('llhs',LLHS)
-    for j in range(40000):
+    print(alpha,reward, penalityW)
+    for j in range(100000):
         
-        operator = LLHS.index(max(LLHS))
-        solution = Operaters(operator+1)
-        cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+            operator = LLHS.index(max(LLHS))
+            solution = Operaters(operator+1)
+            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
         
-        if True: 
-            #move acceptance :
+       
             if cost_new < cost:
                 cost = cost_new
                 LLHS[operator] += j * reward
@@ -179,21 +179,18 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                    best_cost = cost_new
                    solution_best = solution.copy()
                    best_iter=j
-            elif beta > alpha and cost_new <  4 * cost:
+            elif beta > alpha and cost_new < 4 * cost:
                  cost = cost_new
                  LLHS = [0.5] * 9
                  beta = 0
-                 
                  solution_new = solution.copy()
+
              
             else:
-                LLHS[operator] -= j * penatiltyW
+                LLHS[operator] -= j * penalityW
                 beta += 1
                 solution = solution_new.copy()
-        else:
-             LLHS[operator] -= j * penalityF
-             beta += 10 
-             solution=solution_new.copy()       
+              
     solution=solution_best.copy()
     print(solution)
     print('llhs',LLHS)      
@@ -347,6 +344,6 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 
 solution = [1] * NumberOfPipes
 
-HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+Reinforcement_Learning(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
 
