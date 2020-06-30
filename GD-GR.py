@@ -162,41 +162,56 @@ def GreatDeluge(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailabl
     best_c=cost
     
     best_iter = 0
-    best_op = 0
+    op = [0]*9
     
     #Great deuge varuiables:
     level = cost 
-    beta = 0.01
+    beta = 0.001
 
     for i in range(40000):
         
             #Selected LLH using Greedy approche :
-            for j in range(9):
+        for j in range(9):
                 
-                operator = j+1
-                temp_solution = Operaters(operator) 
+                operator = j
+                temp_solution = Operaters(operator+1) 
                 
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
                 if cost_n <= best_c:
                     best_c = cost_n
                     best_op = operator+1
-                 
-            solution = Operaters(best_op)
-            cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+                    
+         ##########################################        
+        solution = Operaters(best_op)
+        cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
 
-            #move acceptance (greate deluge) :
-            if (cost_new < best_cost) or (cost_new < level):
+        if cost_new < best_cost:
                 best_cost = cost_new
-                best_iter = i
-                best_op = best_op
-                solution_new = solution.copy()   
-                print(best_cost)
-            else:
-                    solution = solution_new.copy() 
+                solution_best = solution.copy()
+                best_iter=i
+                op[best_op] += 1
+                print(best_iter,best_cost)
             
-            #update level:
-            level = level - beta
+        if cost_new <= cost :
+                cost = cost_new
+                solution_new = solution.copy()
+                
+        elif(cost_new < level):
+                cost = cost_new
+                solution_new = solution.copy()
+        else:
+                solution = solution_new.copy()
+                
+        #update level:
+        level = level - beta
+        
+        best_c = best_cost
+        
+    solution=solution_best.copy()
+    print(solution)
+    print(best_cost,"   ",best_iter,"  ",op)
+    best_c = best_cost
                   
     print("best cost = " ,best_cost,"    i= ",best_iter,"    LLH = ",best_op)
  
