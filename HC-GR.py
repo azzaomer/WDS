@@ -165,29 +165,31 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 
     #Select LLH using Greedy approach : 
     
-    for i in range(40000):
+    for i in range(40):
             #Selected LLH using Greedy approche :
-       
+            print('i' , i)
+            #print('before_itr' ,solution)
             for j in range(9):
 	
-                #print("#",j+1)
+                print("#",j+1)
                 operator = j+1
                 
                 temp_solution = Operaters(operator) 
                 
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
-               
+                print('costn', cost_n , 'bestc', best_c)
                 if cost_n <= best_c:
                     best_c = cost_n
+                    #solution_new = solution.copy()
                     best_op = operator
+                    print('yes',best_c)
                 
-               
-            # print("                                        LLH = ",best_op)
-            
+            print("                                        LLH = ",best_op)
+    ##############################################################################
             solution=Operaters(best_op)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
-            
+            print(cost_new)
             if cost_new <= best_cost:
                     best_cost = cost_new
                     solution_new = solution.copy()
@@ -198,8 +200,9 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
             else:
                     solution = solution_new.copy() 
                     print('iteration didnt improved cost')
+            best_c = best_cost
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
-    
+    #print(solution)
  
 
    
