@@ -161,47 +161,53 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     best_c=cost
     
     best_iter = 0
-    best_op = 0
+    op = [0] * 9
 
     #Select LLH using Greedy approach : 
     
-    for i in range(40):
+    for i in range(4):
             #Selected LLH using Greedy approche :
             print('i' , i)
             #print('before_itr' ,solution)
             for j in range(9):
 	
-                print("#",j+1)
-                operator = j+1
+                #print("#",j+1)
+                operator = j
                 
-                temp_solution = Operaters(operator) 
+                temp_solution = Operaters(solution,operator+1) 
                 
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
-                print('costn', cost_n , 'bestc', best_c)
+               # print('costn', cost_n , 'bestc', best_c)
                 if cost_n <= best_c:
                     best_c = cost_n
                     #solution_new = solution.copy()
                     best_op = operator
-                    print('yes',best_c)
+                    #print('yes',best_c)
                 
             print("                                        LLH = ",best_op)
     ##############################################################################
-            solution=Operaters(best_op)
+          
+            print("B",solution)
+            print("i",id(solution))
+            solution = Operaters(solution,best_op+1)
+            print("A",solution) 
+            print("i",id(solution))
+            print(operator)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
             print(cost_new)
             if cost_new <= best_cost:
                     best_cost = cost_new
                     solution_new = solution.copy()
-    
+                    op[operator] += 1
                     best_iter = i
                     
-                    print('iteration improved cost=' , best_cost)
+                    #print('iteration improved cost=' , best_cost)
             else:
                     solution = solution_new.copy() 
                     print('iteration didnt improved cost')
             best_c = best_cost
-    print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",best_op)
+    print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",op)
     #print(solution)
  
 
@@ -270,7 +276,7 @@ def ChangeInRange(solution,NumberOfPipeSizesAvailable):
    
 
 #7-randomly initalize solution and pick 2 random pipes increase one and decrease one
-def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
@@ -281,7 +287,7 @@ def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
     return solution
 
 #8-pick 4 rando pipes +2 and -2
-def IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
         solution[s] += 1
@@ -303,7 +309,7 @@ def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
     
 
 
-def Operaters(LLH):
+def Operaters(solution,LLH):
     result = solution
    # print ('LLH' , LLH)
     operator_sol = solution.copy()
@@ -320,9 +326,9 @@ def Operaters(LLH):
     elif LLH == 6:
         result = ChangeInRange(operator_sol,NumberOfPipeSizesAvailable)
     elif LLH == 7:
-        result =IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable)
+        result =IncreaseAndDecreaseP2(operator_sol,NumberOfPipes,NumberOfPipeSizesAvailable)
     elif LLH == 8:
-        result =IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable)
+        result =IncreasndDecreaseP4(operator_sol,NumberOfPipes,NumberOfPipeSizesAvailable)
     elif LLH == 9:
         result =Randomise(operator_sol, NumberOfPipes, NumberOfPipeSizesAvailable)
 
@@ -364,5 +370,6 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
 
 
