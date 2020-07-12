@@ -150,7 +150,6 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     solution_new = solution.copy()
-    solution_best = solution.copy()
     
     print("the initial solution")
     print(solution)
@@ -166,7 +165,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 
     #Select LLH using Greedy approach : 
     
-    for i in range(4):
+    for i in range(2):
             #Selected LLH using Greedy approche :
             print('i' , i)
             #print('before_itr' ,solution)
@@ -174,10 +173,9 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 	
                 #print("#",j+1)
                 operator = j
-                print(i)
-                print("#B1",solution,"  i",id(solution))
+                print("B1",solution,"  i",id(solution))
                 temp_solution = Operaters(solution,operator+1) 
-                print("#A1",solution,"  i",id(solution))
+                print("A1",temp_solution,"  i",id(solution))
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
                # print('costn', cost_n , 'bestc', best_c)
@@ -185,36 +183,32 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     best_c = cost_n
                     #solution_new = solution.copy()
                     best_op = operator
-                    print(best_c)
-                solution = solution_new.copy() 
+                    #print('yes',best_c)
                 
             print("                                        LLH = ",best_op)
-            print(i,solution)
-            
     ##############################################################################
           
+            print('solution before best op',solution,id(solution))
             print("B2",solution,"  i",id(solution))
        
             solution = Operaters(solution,best_op+1)
-            print("A2",solution,"  i",id(solution)) 
-            
+            print("A2",solution,"  i",id(solution))
             print(operator)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
             print(cost_new)
             if cost_new <= best_cost:
                     best_cost = cost_new
                     solution_new = solution.copy()
-                    op[best_op] += 1
+                    op[operator] += 1
                     best_iter = i
                     
                     #print('iteration improved cost=' , best_cost)
             else:
                     solution = solution_new.copy() 
-                    #print('iteration didnt improved cost')
+                    print('iteration solution',solution,id(solution))
             best_c = best_cost
-    solution = solution_best.copy()
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",op)
-    print("*",solution)
+    #print(solution)
  
 
    
@@ -258,7 +252,7 @@ def IncOrDecAllByOne(solution):
         return solution
               
 #5-Increase or decrease a randomly selected pipe diameter by one pipe size:
-def IncOrDecRandomPipe(solution,NumberOfPipeSizesAvailable):
+def IncOrDecRandomly(solution,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     k = random.randint(1,2)
     #Increase
@@ -316,20 +310,29 @@ def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
 
 
 def Operaters(solution,LLH):
-    switcher = {
-        1: lambda :Change(solution, NumberOfPipeSizesAvailable),
-        2: lambda :ChangeTowPipes(solution, NumberOfPipeSizesAvailable),
-        3: lambda :Swap_random(solution),
-        4: lambda :IncOrDecAllByOne(solution),
-        5: lambda :IncOrDecRandomPipe(solution,NumberOfPipeSizesAvailable),
-        6: lambda :ChangeInRange(solution,NumberOfPipeSizesAvailable),
-        7: lambda :IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable),
-        8: lambda :IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable),
-        9: lambda :Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
-    }
-    # Get the function from switcher dictionary
-    func = switcher.get(LLH, lambda: "Invalid operator")
-    return func()
+    result = solution
+   # print ('LLH' , LLH)
+    operator_sol = solution.copy()
+    if LLH == 1 :
+        result =  Change(operator_sol, NumberOfPipeSizesAvailable)
+    elif LLH == 2 :
+        result = ChangeTowPipes(operator_sol, NumberOfPipeSizesAvailable)
+    elif LLH == 3:
+        result = Swap_random(operator_sol)
+    elif LLH == 4:
+        result = IncOrDecAllByOne(operator_sol)
+    elif LLH == 5:
+        result = IncOrDecRandomly(operator_sol,NumberOfPipeSizesAvailable)
+    elif LLH == 6:
+        result = ChangeInRange(operator_sol,NumberOfPipeSizesAvailable)
+    elif LLH == 7:
+        result =IncreaseAndDecreaseP2(operator_sol,NumberOfPipes,NumberOfPipeSizesAvailable)
+    elif LLH == 8:
+        result =IncreasndDecreaseP4(operator_sol,NumberOfPipes,NumberOfPipeSizesAvailable)
+    elif LLH == 9:
+        result =Randomise(operator_sol, NumberOfPipes, NumberOfPipeSizesAvailable)
+
+    return result
 
 #    
 ##################################################################################################################
@@ -367,3 +370,4 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
