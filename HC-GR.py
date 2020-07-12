@@ -150,7 +150,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     solution_new = solution.copy()
-    
+    solution_best = solution.copy()
     print("the initial solution")
     print(solution)
     print(cost)
@@ -208,6 +208,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     solution = solution_new.copy() 
                     #print('iteration didnt improved cost')
             best_c = best_cost
+    solution=solution_best.copy()
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",op)
     #print(solution)
  
