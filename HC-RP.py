@@ -154,16 +154,22 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     
     best_cost = cost
     best_iter = 0
-    best_op = 0
-   
-    #Select LLH using Random Permutation RP :
-    permutation = np.random.permutation([1,2,3,4,5,6,7,8,9])
+    
+    op = [0] * 9
+    #Select LLH using Random Permutation RDP :
+    permutation = np.random.permutation([0,1,2,3,4,5,6,7,8])
 
-    for i in range(40000):
+    for i in range(100000):
             
-            op = permutation[i%len(permutation)]
-            solution = Operaters(op)
+            operator = permutation[i%len(permutation)]
             
+            #print("B",solution)
+            #print("i",id(solution))
+            solution = Operaters(solution,operator+1)
+            #print("i",id(solution))
+            #print("A",solution)
+            #print(operator)
+            #print(permutation)
             #calculate the new cost :
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
            
@@ -171,16 +177,16 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
             if cost_new <= best_cost:
                 best_cost = cost_new
                 best_iter = i
-                best_op = op
+                op[operator] += 1
                 solution_new = solution.copy()   
                 print(best_cost)
             else:    
                 solution = solution_new.copy()
-                 
+               
                
 	
         
-    print("the best cost = " ,best_cost,"   at iteration = ",best_iter,"using LLH ",best_op)
+    print("the best cost = " ,best_cost,"   at iteration = ",best_iter,"using LLH ",op)
     print(solution)
     print(permutation)
 
@@ -248,7 +254,7 @@ def ChangeInRange(solution,NumberOfPipeSizesAvailable):
    
 
 #7-randomly initalize solution and pick 2 random pipes increase one and decrease one
-def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
@@ -259,7 +265,7 @@ def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
     return solution
 
 #8-pick 4 rando pipes +2 and -2
-def IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
         solution[s] += 1
@@ -280,7 +286,7 @@ def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
     return solution
     
 #Dictionary mapping for functions 
-def Operaters(LLH):
+def Operaters(solution,LLH):
   
     switcher = {
         1: lambda :Change(solution, NumberOfPipeSizesAvailable),
@@ -289,8 +295,8 @@ def Operaters(LLH):
         4: lambda :IncOrDecAllByOne(solution),
         5: lambda :IncOrDecRandomly(solution,NumberOfPipeSizesAvailable),
         6: lambda :ChangeInRange(solution,NumberOfPipeSizesAvailable),
-        7: lambda :IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable),
-        8: lambda :IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable),
+        7: lambda :IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable),
+        8: lambda :IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable),
         9: lambda :Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable)
     }
     # Get the function from switcher dictionary
@@ -332,3 +338,4 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
