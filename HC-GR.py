@@ -151,6 +151,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
     cost = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
     solution_new = solution.copy()
     solution_best = solution.copy()
+    
     print("the initial solution")
     print(solution)
     print(cost)
@@ -165,7 +166,7 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 
     #Select LLH using Greedy approach : 
     
-    for i in range(1000):
+    for i in range(4):
             #Selected LLH using Greedy approche :
             print('i' , i)
             #print('before_itr' ,solution)
@@ -173,9 +174,10 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
 	
                 #print("#",j+1)
                 operator = j
-                print("B",solution,"  i",id(solution))
+                print(i)
+                print("#B1",solution,"  i",id(solution))
                 temp_solution = Operaters(solution,operator+1) 
-                print("A",solution,"  i",id(solution))
+                print("#A1",solution,"  i",id(solution))
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
                 
                # print('costn', cost_n , 'bestc', best_c)
@@ -184,16 +186,17 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     #solution_new = solution.copy()
                     best_op = operator
                     print(best_c)
-		solution = solution_new.copy()
+                solution = solution_new.copy() 
                 
             print("                                        LLH = ",best_op)
+            print(i,solution)
             
     ##############################################################################
           
-            print("B",solution,"  i",id(solution))
+            print("B2",solution,"  i",id(solution))
        
             solution = Operaters(solution,best_op+1)
-            print("A",solution,"  i",id(solution)) 
+            print("A2",solution,"  i",id(solution)) 
             
             print(operator)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
@@ -209,9 +212,9 @@ def HillClimbing(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailab
                     solution = solution_new.copy() 
                     #print('iteration didnt improved cost')
             best_c = best_cost
-    solution=solution_best.copy()
+    solution = solution_best.copy()
     print("the best cost = " ,best_cost,"   iteration = ",best_iter,"   LLH = ",op)
-    #print(solution)
+    print("*",solution)
  
 
    
