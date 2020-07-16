@@ -162,28 +162,28 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     
     best_iter = 0
     best_op = 0
-    k=50000
+    k=100
     l = [cost]*k
     
     i=0
     
     op = [0]*9
     #Select LLH using Greedy approach :  
-    while i < 40000:
+    while i < 100000:
             #Selected LLH using Greedy approche :
             for j in range(9):
 
                 operator = j
-                temp_solution = Operaters(operator+1) 
+                temp_solution = Operaters(solution,operator+1) 
                 
                 cost_n = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, temp_solution)
             
                 if cost_n <= best_c:
                     best_c = cost_n
-                    best_op = operator+1
+                    best_op = operator
                 
             
-            solution=Operaters(best_op)
+            solution=Operaters(solution,best_op+1)
             cost_new = runSim(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
             v = i % k
              #move acceptance
@@ -191,7 +191,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
                 best_cost = cost_new
                 solution_best = solution.copy()
                 best_iter=i
-                op[operator] += 1
+                op[best_op] += 1
                 print(best_iter,best_cost)
             
             if cost_new <= cost :
@@ -212,7 +212,7 @@ def LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvail
     
     solution = solution_best .copy()
     print("best cost = " ,best_cost,"    i = ",best_iter,"    ",op)
-    #print(solution)
+    print(solution)
  
 
    
@@ -280,7 +280,7 @@ def ChangeInRange(solution,NumberOfPipeSizesAvailable):
    
 
 #7-randomly initalize solution and pick 2 random pipes increase one and decrease one
-def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreaseAndDecreaseP2(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
@@ -291,7 +291,7 @@ def IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable):
     return solution
 
 #8-pick 4 rando pipes +2 and -2
-def IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable):
+def IncreasndDecreaseP4(solution,NumberOfPipes,NumberOfPipeSizesAvailable):
     s = random.randint(0, len(solution) - 1)
     if solution[s] < (NumberOfPipeSizesAvailable-1):
         solution[s] += 1
@@ -313,7 +313,7 @@ def Randomise(solution, NumberOfPipes, NumberOfPipeSizesAvailable):
     
 
 
-def Operaters(LLH):
+def Operaters(solution,LLH):
     result = solution
    # print ('LLH' , LLH)
     operator_sol = solution.copy()
@@ -330,9 +330,9 @@ def Operaters(LLH):
     elif LLH == 6:
         result = ChangeInRange(operator_sol,NumberOfPipeSizesAvailable)
     elif LLH == 7:
-        result =IncreaseAndDecreaseP2(NumberOfPipes,NumberOfPipeSizesAvailable)
+        result =IncreaseAndDecreaseP2(operator_sol ,NumberOfPipes,NumberOfPipeSizesAvailable)
     elif LLH == 8:
-        result =IncreasndDecreaseP4(NumberOfPipes,NumberOfPipeSizesAvailable)
+        result =IncreasndDecreaseP4(operator_sol ,NumberOfPipes,NumberOfPipeSizesAvailable)
     elif LLH == 9:
         result =Randomise(operator_sol, NumberOfPipes, NumberOfPipeSizesAvailable)
 
@@ -374,5 +374,9 @@ DoesTheNodeDeficitConsiderEN_ELEVATION = int(data[NumberOfPipes + NumberOfPipeSi
 solution = [1] * NumberOfPipes
 
 LateAcceptance(f_name, PipeIDs, PipeSizesAvailable, CostPerEachPipeSizeAvailable, NodesRequireHeadLevelDict, DoesTheNodeDeficitConsiderEN_ELEVATION, solution)
+
+
+
+
 
 
